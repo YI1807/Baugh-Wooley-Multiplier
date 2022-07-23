@@ -1,0 +1,77 @@
+`timescale 1ns / 1ps
+
+////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer:
+//
+// Create Date:   15:05:12 02/08/2022
+// Design Name:   mult8bw
+// Module Name:   F:/Verilog/Baugh_Wooley/baugh_wooley_tb.v
+// Project Name:  Baugh_Wooley
+// Target Device:  
+// Tool versions:  
+// Description: 
+//
+// Verilog Test Fixture created by ISE for module: mult8bw
+//
+// Dependencies:
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+////////////////////////////////////////////////////////////////////////////////
+
+module baugh_wooley_tb;
+
+	// Inputs
+	reg [7:0] a;
+	reg [7:0] b;
+	integer aval,bval;
+	// Outputs
+	wire [15:0] p;
+	integer pval;//numeric value to pval
+	integer check;//value used to check correctness
+	integer i,j; // for loop
+	integer num_correct;
+	integer num_wrong;
+	//65536
+
+	// Instantiate the Unit Under Test (UUT)
+	mult8bw uut (
+		.a(a), 
+		.b(b), 
+		.p(p)
+	);
+
+	initial begin
+		// Initialize Inputs
+		num_correct =0;
+		num_wrong = 0;
+		for(i=0;i<256;i=i+1)
+		begin
+			a=i;
+			aval =-a[7]*16+ a[4:0];
+				for(j=1;j<256;j=j+1)
+				begin
+					b=j;
+					bval = -b[7]*16+b[4:0];
+					check = aval*bval;
+					#10 pval = -p[15]*32768 + p[14:0];
+					if(pval == check)
+						num_correct = num_correct+1;
+					else
+						num_wrong = num_wrong+1;
+						$display($time,"%d*%d = %d(%d)",aval,bval,pval,check);
+					end
+				end
+		$display("num_correct = %d,num_wrong = %d",num_correct,num_wrong);
+			
+        
+		// Add stimulus here
+		
+
+end
+      
+endmodule
+
